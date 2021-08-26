@@ -31,5 +31,6 @@ public class Address {
 	public String toString() {
 		
 		return "State - "+state+"\nCity - "+city+"\nZip Code - "+zip;
-}
+	}
+
 }
