@@ -50,4 +50,7 @@ public class PersonContact {
 		return "Person Details:\n First Name is:  "+firstName+" \n Last Name is: "+lastName+"\n Phone Number is: "+number+"\n Email is :"+email+"\n Address is: "+address;
 	}
 
-}
+		
+	}
+
+

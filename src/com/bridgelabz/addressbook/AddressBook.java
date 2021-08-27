@@ -1,17 +1,18 @@
 package com.bridgelabz.addressbook;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
-public class AddressBook{
 
+public class AddressBook implements AddressBookIF{
+	
+	private int people=3;
+	static int entries=0;
 	Scanner sc = new Scanner(System.in);
-	ArrayList <PersonContact> contactList = new ArrayList<PersonContact>();
+	PersonContact contact[]=new PersonContact[people];
 	
 	public void startOperation() {
 		boolean changes = true;
 		do{
-
+			
 			System.out.println("Choose the operation you want to perform");
 			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5.Exit Address book System");
 
@@ -36,7 +37,12 @@ public class AddressBook{
 	}
 	
 	public void addContact() {
-		
+		System.out.println("No of people?");
+		people =sc.nextInt();
+		int stop= people+entries;
+		if(!(stop>people))
+		{
+		for(int i=entries; i<stop; i++) {
 		PersonContact person = new PersonContact();
 		Address address = new Address();
 		
@@ -70,20 +76,23 @@ public class AddressBook{
 		address.setState(state);
 		address.setZip(zipCode);
 		person.setAddress(address);
-		contactList.add(person);
-		
+		contact[i]=person;
+		entries++;
 	}
+	}
+	else 
+		{
+			System.out.println("FULL!");
+		}
+	}
+	
 	
 	public void editPerson() {
 		
 		System.out.println("Enter the first name:");
 		String firstName = sc.next();
-		Iterator<PersonContact> iterator = contactList.listIterator();
-		
-		while(iterator.hasNext()) {
-			
-			PersonContact person = iterator.next();
-			
+		for(int i=0;i<entries;i++) {
+			PersonContact person = contact[i];
 			if(firstName.equals(person.getFirstName()) ) {
 				
 				Address address = person.getAddress();
@@ -126,34 +135,34 @@ public class AddressBook{
 				
 			}
 		}
-		
 	}
+		
+	
 	
 	public void deletePerson() {
 		
-		System.out.println("Enter the first name of the person to be deleted");
+		System.out.println("Enter the name of the person to be deleted");
 		String firstName = sc.next();
-		Iterator<PersonContact> iterator = contactList.listIterator();
+		for(int i=0;i<entries;i++) {
+			PersonContact person = contact[i];
 		
-		while(iterator.hasNext()) {
+		while(firstName.equals(person.getFirstName())) {
 			
-			PersonContact person = iterator.next();
-			
-			if(firstName.equals(person.getFirstName())) {
-				contactList.remove(person);
+			for(int j=i; j<contact.length-1;j++) {
+				contact[j]=contact[j+1];
 				return;
 			}
+		}
 		}
 	}
 	
 	public void displayContents() {
 		
-		Iterator <PersonContact> iterator = contactList.iterator();
-		while(iterator.hasNext()) {
-			System.out.println(iterator.next());
+		for(int i=0; i<entries; i++) {
+			System.out.println(contact[i]);
 		}
 		
 	}
 	
-
-	}
+	
+}
