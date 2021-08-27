@@ -6,14 +6,22 @@ public class AddressBook implements AddressBookIF{
 	
 	private int people=3;
 	static int entries=0;
+	public String addressBookname;
 	Scanner sc = new Scanner(System.in);
 	PersonContact contact[]=new PersonContact[people];
-	
+	public String getAddressBookname() {
+		return addressBookname;
+	}
+	public void setAddressBookname(String addressBookname)
+	{
+		this.addressBookname= addressBookname;
+	}
+	@Override
 	public void startOperation() {
 		boolean changes = true;
 		do{
 			
-			System.out.println("Choose the operation you want to perform");
+			System.out.println("Choose");
 			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5.Exit Address book System");
 
 			switch (sc.nextInt()) {
@@ -37,12 +45,23 @@ public class AddressBook implements AddressBookIF{
 	}
 	
 	public void addContact() {
+		int numberOfPeople = sc.nextInt();
+		int Entries = numberOfPeople+entries;
+		
+		if(Entries > people) {
+			System.out.println("FULL");
+			System.out.println("You can add: "+(numberOfPeople-entries));
+			return;
+		}
+		else {
+			
+			for(int i=entries; i < Entries ; i++) {
 		System.out.println("No of people?");
 		people =sc.nextInt();
 		int stop= people+entries;
 		if(!(stop>people))
 		{
-		for(int i=entries; i<stop; i++) {
+		for(i=entries; i<stop; i++) {
 		PersonContact person = new PersonContact();
 		Address address = new Address();
 		
@@ -84,8 +103,11 @@ public class AddressBook implements AddressBookIF{
 		{
 			System.out.println("FULL!");
 		}
-	}
 	
+		}
+		}
+	}
+		
 	
 	public void editPerson() {
 		
