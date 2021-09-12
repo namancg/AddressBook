@@ -8,4 +8,5 @@ public interface AddressBookDirIF {
 	public void searchByCity();
 	public void searchByState();
 	public void displayPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listToDisplay);
+	public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listToDisplay);
 }
