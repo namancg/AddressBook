@@ -6,7 +6,9 @@ public class AddressBook implements AddressBookIF{
 
 	public String addressBookname;
 	Scanner sc = new Scanner(System.in);
-	Map<String, PersonContact> contactList = new HashMap<String,PersonContact>();
+	public Map<String, PersonContact> contactList = new HashMap<String,PersonContact>();
+	public static HashMap<String, ArrayList<PersonContact>> personByCity  = new HashMap<String, ArrayList<PersonContact>>();
+	public static HashMap<String, ArrayList<PersonContact>>personByState = new HashMap<String, ArrayList<PersonContact>>();
 	public String getAddressBookname() {
 		return addressBookname;
 	}
@@ -77,6 +79,8 @@ public class AddressBook implements AddressBookIF{
 		address.setState(state);
 		address.setZip(zipCode);
 		person.setAddress(address);
+		addPersonToCity(person);
+		addPersonToState(person);
 		contactList.put(firstName, person);
 	}
 	
@@ -131,7 +135,27 @@ public class AddressBook implements AddressBookIF{
 		}
 	
 		
-	
+	public void addPersonToCity(PersonContact contact) {
+		if (personByCity.containsKey(contact.getAddress().getCity())) {
+			personByCity.get(contact.getAddress().getCity()).add(contact);
+		}
+		else {
+			ArrayList<PersonContact> cityList = new ArrayList<PersonContact>();
+			cityList.add(contact);
+			personByCity.put(contact.getAddress().getCity(), cityList);
+		}
+	}
+
+	public void addPersonToState(PersonContact contact) {
+		if (personByState.containsKey(contact.getAddress().getState())) {			
+			personByState.get(contact.getAddress().getState()).add(contact);
+		}
+		else {
+			ArrayList<PersonContact> stateList = new ArrayList<PersonContact>();
+			stateList.add(contact);
+			personByState.put(contact.getAddress().getState(), stateList);
+		}
+	}
 	
 	public void deletePerson() {
 		
