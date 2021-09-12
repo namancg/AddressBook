@@ -1,7 +1,6 @@
 package com.bridgelabz.addressbook;
 import java.util.*;
 public class AddressBookDir {
-	private static final int totalAddressBooks = 3;
 	Scanner sc = new Scanner(System.in);
 	Map<String,AddressBook> addressBookDirectory = new HashMap<String,AddressBook>();
 	public AddressBook addressBook;
@@ -12,19 +11,22 @@ public void operationSystem() {
 	boolean changes = true;
 	do{
 		System.out.println("\nWhch operation to perform???");
-		System.out.println("1.Add new \n2.Display Address book \n3.EditAddress Book\n4.Exit");
+		System.out.println("1.Add new \n2.Search by City \n3.EditAddress Book\n4.Exit");
 
 		switch (sc.nextInt()) {
 		case 1:
 			addAddressBook();
 			break;
 		case 2:
-			displaySystemContents();
+			searchByCity();
 			break;
 		case 3:
-			editAddress();
+			searchByState();
 			break;
 		case 4:
+			editAddress();
+			break;
+		case 5:
 			changes = false;
 		}
 
@@ -62,5 +64,44 @@ public void displaySystemContents() {
 		
 		System.out.println(eachBookName);
 }
+}
+public void searchByCity() {
+
+	System.out.println("Enter the name of the City where the Person resides : ");
+	String cityName = sc.next();
+	System.out.println("enter the name of the Person : ");
+	String personName = sc.next();
+
+	for(AddressBook addressBook : addressBookDirectory.values()) {
+		for(PersonContact person : addressBook.getContact()) {
+			if(person.getFirstName().equals(personName) && person.getAddress().getCity().equals(cityName)) {
+				System.out.println(personName+" Found in Address Book : "+addressBook.getAddressBookname()+" !");
+				System.out.println(person);
+				return;
+			}
+		}
+	}
+	System.out.println("Contact Does Not Exist !!");
+
+}
+
+public void searchByState() {
+
+	System.out.println("Enter the name of the State where the Person resides : ");
+	String StateName = sc.next();
+	System.out.println("Enter the name of the Person : ");
+	String personName = sc.next();
+
+	for(AddressBook addressBook : addressBookDirectory.values()) {
+		for(PersonContact person : addressBook.getContact()) {
+			if(person.getFirstName().equals(personName) && person.getAddress().getState().equals(StateName)) {
+				System.out.println(personName+" Found in Book : "+addressBook.getAddressBookname()+" !");
+				System.out.println(person);
+				return;
+			}
+		}
+	}
+	System.out.println("Contact Does Not Exist !!");
+
 }
 }
