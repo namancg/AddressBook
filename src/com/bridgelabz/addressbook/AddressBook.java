@@ -3,12 +3,10 @@ import java.util.*;
 
 
 public class AddressBook implements AddressBookIF{
-	
-	private int people=3;
-	static int entries=0;
+
 	public String addressBookname;
 	Scanner sc = new Scanner(System.in);
-	PersonContact contact[]=new PersonContact[people];
+	Map<String, PersonContact> contactList = new HashMap<String,PersonContact>();
 	public String getAddressBookname() {
 		return addressBookname;
 	}
@@ -45,23 +43,7 @@ public class AddressBook implements AddressBookIF{
 	}
 	
 	public void addContact() {
-		int numberOfPeople = sc.nextInt();
-		int Entries = numberOfPeople+entries;
 		
-		if(Entries > people) {
-			System.out.println("FULL");
-			System.out.println("You can add: "+(numberOfPeople-entries));
-			return;
-		}
-		else {
-			
-			for(int i=entries; i < Entries ; i++) {
-		System.out.println("No of people?");
-		people =sc.nextInt();
-		int stop= people+entries;
-		if(!(stop>people))
-		{
-		for(i=entries; i<stop; i++) {
 		PersonContact person = new PersonContact();
 		Address address = new Address();
 		
@@ -95,33 +77,23 @@ public class AddressBook implements AddressBookIF{
 		address.setState(state);
 		address.setZip(zipCode);
 		person.setAddress(address);
-		contact[i]=person;
-		entries++;
+		contactList.put(firstName, person);
 	}
-	}
-	else 
-		{
-			System.out.println("FULL!");
-		}
 	
-		}
-		}
-	}
 		
 	
 	public void editPerson() {
-		
+		PersonContact person = new PersonContact();
+
 		System.out.println("Enter the first name:");
 		String firstName = sc.next();
-		for(int i=0;i<entries;i++) {
-			PersonContact person = contact[i];
-			if(firstName.equals(person.getFirstName()) ) {
-				
-				Address address = person.getAddress();
-				System.out.println("\nChoose the attribute you want to change:");
-				System.out.println("1.Last Name\n2.Phone Number\n3.Email\n4.City\n5.State\n6.ZipCode");
-				int choice = sc.nextInt();
-				
+		
+		if(contactList.containsKey(firstName)) {
+			person = contactList.get(firstName);
+			Address address = person.getAddress();
+			System.out.println("Choose the attribute you want to change:");
+			System.out.println("1.Last Name\n2.Phone Number\n3.Email\n4.City\n5.State\n6.ZipCode");
+			int choice = sc.nextInt();
 				switch(choice) {
 				case 1: 
 					System.out.println("Enter the correct Last Name :");
@@ -157,31 +129,29 @@ public class AddressBook implements AddressBookIF{
 				
 			}
 		}
-	}
+	
 		
 	
 	
 	public void deletePerson() {
 		
-		System.out.println("Enter the name of the person to be deleted");
+		System.out.println("Enter the name of the person to be deleted from address book");
 		String firstName = sc.next();
-		for(int i=0;i<entries;i++) {
-			PersonContact person = contact[i];
-		
-		while(firstName.equals(person.getFirstName())) {
-			
-			for(int j=i; j<contact.length-1;j++) {
-				contact[j]=contact[j+1];
-				return;
-			}
+		if(contactList.containsKey(firstName)) {
+			contactList.remove(firstName);
+			System.out.println("Successfully Deleted");
 		}
+		else {
+			System.out.println("Contact Not Found!");
 		}
-	}
+}
+
 	
 	public void displayContents() {
 		
-		for(int i=0; i<entries; i++) {
-			System.out.println(contact[i]);
+		for (String contact : contactList.keySet()) {
+			PersonContact person = contactList.get(contact);
+			System.out.println(person);
 		}
 		
 	}
