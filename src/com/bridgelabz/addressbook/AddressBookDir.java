@@ -11,7 +11,7 @@ public void operationSystem() {
 	boolean changes = true;
 	do{
 		System.out.println("\nWhch operation to perform???");
-		System.out.println("1.Add new \n2.Search by City \n3.EditAddress Book\n4.Exit");
+		System.out.println("1.Add new \n2.Search by City \n3.EditAddress Book\n4.Edit address\n5. display by region\n6.count people\n7.display\nexit");
 
 		switch (sc.nextInt()) {
 		case 1:
@@ -30,10 +30,32 @@ public void operationSystem() {
 			displayPeopleByRegion(AddressBook.personByCity);
 			break;
 		case 6:
-			changes = false;
+			System.out.println("Enter \n1.Display By City\n2.Display By State");
+			int countChoice = sc.nextInt();
+			if(countChoice==1)
+				countPeopleByARegion(AddressBook.personByCity);
+			else 
+				countPeopleByARegion(AddressBook.personByState);
+			break;
+		case 7:
+			displaySystemContents();
+		case 8:
+			changes =false;
 		}
 
 	}while(changes);
+}
+private void countPeopleByARegion(HashMap<String, ArrayList<PersonContact>> personByState) {
+	ArrayList<PersonContact> list;
+	for (String region : personByState.keySet()) {
+		int count = 0;
+		list = personByState.get(region);
+		for (PersonContact person : list) {
+			count++;
+		}
+		System.out.println("Number of People residing in " + region+" are: "+count);
+	}
+	
 }
 public void addAddressBook() {
 		System.out.println("Enter the name of the Book ");
