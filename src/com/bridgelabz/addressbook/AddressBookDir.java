@@ -27,6 +27,9 @@ public void operationSystem() {
 			editAddress();
 			break;
 		case 5:
+			displayPeopleByRegion(AddressBook.personByCity);
+			break;
+		case 6:
 			changes = false;
 		}
 
@@ -102,6 +105,17 @@ public void searchByState() {
 		}
 	}
 	System.out.println("Contact Does Not Exist !!");
+
+}
+public void displayPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listToDisplay) {
+	ArrayList<PersonContact> list;
+	for (String name : listToDisplay.keySet()) {
+		System.out.println("People residing in: " + name);
+		list = listToDisplay.get(name);
+		for (PersonContact contact : list) {
+			System.out.println(contact);
+		}
+	}
 
 }
 }
