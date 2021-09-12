@@ -3,8 +3,8 @@ import java.util.*;
 public class AddressBookDir {
 	private static final int totalAddressBooks = 3;
 	Scanner sc = new Scanner(System.in);
-	AddressBook[] addressBookDir = new AddressBook[totalAddressBooks];
-	int numOfAddressBooks = 0;
+	Map<String,AddressBook> addressBookDirectory = new HashMap<String,AddressBook>();
+	public AddressBook addressBook;
 
 
 public void operationSystem() {
@@ -31,73 +31,36 @@ public void operationSystem() {
 	}while(changes);
 }
 public void addAddressBook() {
-	int numOfAddressBooks = 0;
-	System.out.println("Enter number of Books ");
-	int extraInput= sc.nextInt();
-	int Entries = extraInput+numOfAddressBooks;
-	String addressBookName = "";
-	
-	if(numOfAddressBooks == 0) {
 		System.out.println("Enter the name of the Book ");
+		String addressBookName = sc.next();
 		addressBookName = sc.next();
-		AddressBook newAddressBook = new AddressBook();
-		newAddressBook.setAddressBookname(addressBookName);
-		addressBookDir[numOfAddressBooks] = newAddressBook;
-		numOfAddressBooks++;
-	}
-	
-	if(!(Entries > totalAddressBooks))
-	 {
-		
-		boolean bookExists = false;
-		for(int i=0; i < numOfAddressBooks ; i++) {
-			
-			System.out.println("Enter the name of the Book");
-			addressBookName = sc.next();
-			AddressBook addressBook = addressBookDir[i];
-			
-			if(addressBookName.equals(addressBook.getAddressBookname())) {
-				bookExists = true;
-			}
-			
-		}
-		if(bookExists) {
-			System.out.println("Change the name");
+		if(addressBookDirectory.containsKey(addressBookName)) {
+			System.out.println("Book Name Is Present");
 			return;
 		}
-		else {
-			AddressBook newAddressBook = new AddressBook();
-			newAddressBook.setAddressBookname(addressBookName);
-			addressBookDir[numOfAddressBooks] = newAddressBook;
-			numOfAddressBooks++;
-		}
+		AddressBook newAddressBook = new AddressBook();
+		newAddressBook.setAddressBookname(addressBookName);
+		addressBookDirectory.put(addressBookName, newAddressBook);
 	}
-	else {
-				System.out.println("No space");
-				return;
-	}
-	
-}
 public void editAddress() {
 	System.out.println("Name of the Address Book ");
 	String addressBookName = sc.next();
 			
-	for(int i = 0; i <totalAddressBooks; i++) {
-		
-		AddressBook addressBook = addressBookDir[i];
-		
-		if(addressBookName.equals(addressBook.getAddressBookname())) {
-			addressBook.startOperation();
-		}
+	if(addressBookDirectory.containsKey(addressBookName)) {
+		addressBook = addressBookDirectory.get(addressBookName);
+		addressBook.startOperation();
+	}
+	else {
+		System.out.println("Book Does Not Exist");
 	}
 }
 
 public void displaySystemContents() {
 	
 	System.out.println("Contents are");
-	for(int i=0; i < totalAddressBooks ; i++) {
-		System.out.println(addressBookDir[i]);
+	for (String eachBookName : addressBookDirectory.keySet()) {
 		
-	}
+		System.out.println(eachBookName);
+}
 }
 }
