@@ -67,12 +67,12 @@ public void addAddressBook() {
 		System.out.println("Enter the name of the Book ");
 		String addressBookName = sc.next();
 		if(addressBookDirectory.containsKey(addressBookName)) {
-			System.out.println("Book Name Is Present");
+			System.out.println("Book Name Already Exists");
 			return;
 		}
-		AddressBook newAddressBook = new AddressBook();
-		newAddressBook.setAddressBookname(addressBookName);
-		addressBookDirectory.put(addressBookName, newAddressBook);
+		AddressBook addressBook = new AddressBook();
+		addressBook.setAddressBookname(addressBookName);
+		addressBookDirectory.put(addressBookName, addressBook);
 	}
 public void editAddress() {
 	System.out.println("Name of the Address Book ");
@@ -106,9 +106,9 @@ public void searchByCity() {
 		ArrayList<PersonContact> contactList = addressBook.getContact();
 		contactList.stream()
 			.filter(person -> person.getFirstName().equals(personName) && person.getAddress().getCity().equals(cityName))
-			.forEach(person -> System.out.println(person));	
+			.forEach(person -> System.out.println(person));
+		
 	}		
-	System.out.println("Contact Does Not Exist !!");
 
 }
 
@@ -122,8 +122,9 @@ public void searchByState() {
 	for(AddressBook addressBook : addressBookDirectory.values()) {
 		ArrayList<PersonContact> contactList = ((AddressBook) addressBook).getContact();
 		contactList.stream()
-			.filter(person -> person.getFirstName().equals(personName) && person.getAddress().getState().equals(stateName))
-			.forEach(person -> System.out.println(person));		
+			 .filter(person -> person.getFirstName().equals(personName) && person.getAddress().getState().equals(stateName))
+			.forEach(person -> System.out.println(person));
+		
 	}
 
 
@@ -131,14 +132,24 @@ public void searchByState() {
 
 }
 public void displayPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listToDisplay) {
-	ArrayList<PersonContact> list;
-	for (String name : listToDisplay.keySet()) {
-		System.out.println("People residing in: " + name);
-		list = listToDisplay.get(name);
-		for (PersonContact contact : list) {
-			System.out.println(contact);
-		}
-	}
+	System.out.println("Enter the name of the region :");
+	String regionName = sc.next();
+	listToDisplay.values().stream()
+		.map(region -> region.stream()
+		.filter(person -> person.getAddress().getState().equals(regionName) || person.getAddress().getCity().equals(regionName)))
+		.forEach(person -> person.forEach(personDetails -> System.out.println(personDetails)));
 
+}
+public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listToDisplay) {
+
+	System.out.println("Enter the name of the region :");
+	String regionName = sc.next();
+	long countPeople = listToDisplay.values().stream()
+			.map(region -> region.stream()
+				.filter(person -> person.getAddress().getState().equals(regionName) || person.getAddress().getCity().equals(regionName)))
+				.count();
+				
+	System.out.println("Number of People residing in " + regionName+" are: "+countPeople+"\n");
+	
 }
 }
