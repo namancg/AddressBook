@@ -187,6 +187,9 @@ public class AddressBook implements AddressBookIF{
 		}
 		
 	}
+	public ArrayList<PersonContact> getContact() {
+		return new ArrayList<PersonContact>(contactList.values());
+	}
 	
 	
 }
