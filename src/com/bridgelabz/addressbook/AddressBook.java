@@ -1,5 +1,6 @@
 package com.bridgelabz.addressbook;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class AddressBook implements AddressBookIF{
@@ -190,6 +191,20 @@ public class AddressBook implements AddressBookIF{
 	public ArrayList<PersonContact> getContact() {
 		return new ArrayList<PersonContact>(contactList.values());
 	}
+public void sortAddressBook() {
+		
+		List<PersonContact> sortedContactList = contactList.values().stream()
+				.sorted((firstperson, secondperson) -> firstperson.getFirstName().compareTo(secondperson.getFirstName()))
+				.collect(Collectors.toList());
+		
+		System.out.println("Sorted Address Book "+this.getAddressBookname()+"");
+		Iterator iterator = sortedContactList.iterator();
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+			System.out.println();
+		}
+	}
+
 	
 	
 }
