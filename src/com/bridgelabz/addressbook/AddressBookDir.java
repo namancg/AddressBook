@@ -11,31 +11,46 @@ public void operationSystem() {
 	boolean changes = true;
 	do{
 		System.out.println("\nWhch operation to perform???");
-		System.out.println("1.Add new \n2.Search by City \n3.EditAddress Book\n4.Edit address\n5. display by region\n6.count people\n7.display\nexit");
+		System.out.println("1.Add new \n2.Edit Address book \n3.Search person by a region\n4.View people by region\n5. display by region\n6.count people\n7.display\n 8exit");
 
 		switch (sc.nextInt()) {
 		case 1:
 			addAddressBook();
 			break;
-		case 2:
-			searchByCity();
-			break;
 		case 3:
-			searchByState();
+			System.out.println("1.Search By City\n2.Search By State");
+			int Choice = sc.nextInt();
+			if(Choice==1)
+				searchByCity();
+			else 
+				searchByState();
 			break;
-		case 4:
+		case 2:
 			editAddress();
 			break;
-		case 5:
-			displayPeopleByRegion(AddressBook.personByCity);
+		case 4:
+			System.out.println("1.Display By City\n2.Display By State");
+			int Choice1 = sc.nextInt();
+			if(Choice1==1)
+				displayPeopleByRegion(AddressBook.personByCity);
+			else 
+				displayPeopleByRegion(AddressBook.personByState);
 			break;
-		case 6:
-			System.out.println("Enter \n1.Display By City\n2.Display By State");
+		case 5:
+			System.out.println("1.Display By City\n2.Display By State");
 			int countChoice = sc.nextInt();
 			if(countChoice==1)
 				countPeopleByARegion(AddressBook.personByCity);
 			else 
 				countPeopleByARegion(AddressBook.personByState);
+			break;
+		case 6:
+			System.out.println("Enter \n1.Display By City\n2.Display By State");
+			int countChoice1 = sc.nextInt();
+			if(countChoice1==1)
+				countPeopleByRegion(AddressBook.personByCity);
+			else 
+				countPeopleByRegion(AddressBook.personByState);
 			break;
 		case 7:
 			displaySystemContents();
@@ -97,7 +112,7 @@ public void displaySystemContents() {
 }
 public void searchByCity() {
 
-	System.out.println("Enter the name of the City where the Person resides : ");
+	System.out.println("Enter the name of City where the Person resides : ");
 	String cityName = sc.next();
 	System.out.println("enter the name of the Person : ");
 	String personName = sc.next();
@@ -114,7 +129,7 @@ public void searchByCity() {
 
 public void searchByState() {
 
-	System.out.println("Enter the name of the State where the Person resides : ");
+	System.out.println("Enter the name if state where the person stays : ");
 	String stateName = sc.next();
 	System.out.println("Enter the name of the Person : ");
 	String personName = sc.next();
@@ -149,7 +164,7 @@ public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listTo
 				.filter(person -> person.getAddress().getState().equals(regionName) || person.getAddress().getCity().equals(regionName)))
 				.count();
 				
-	System.out.println("Number of People residing in " + regionName+" are: "+countPeople+"\n");
+	System.out.println("No of People residing in " + regionName+" are: "+countPeople);
 	
 }
 }
