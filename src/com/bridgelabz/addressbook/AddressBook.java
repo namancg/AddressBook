@@ -15,6 +15,7 @@ public class AddressBook implements AddressBookIF{
 	public void setAddressBookname(String addressBookname)
 	{
 		this.addressBookname= addressBookname;
+		startOperation();
 	}
 	@Override
 	public void startOperation() {
@@ -52,6 +53,13 @@ public class AddressBook implements AddressBookIF{
 		
 		System.out.println("First Name: ");
 		String firstName = sc.next();
+		contactList.entrySet().stream().forEach(entry -> {
+			if(entry.getKey().equals(firstName.toLowerCase())) {
+				System.out.println("Contact Already Exists");
+				boolean	isPresent = true;
+				return;
+			}
+		});
 		
 		System.out.println("Last Name: ");
 		String lastName = sc.next();
@@ -178,9 +186,6 @@ public class AddressBook implements AddressBookIF{
 			System.out.println(person);
 		}
 		
-	}
-	public ArrayList<PersonContact> getContact() {
-		return new ArrayList<PersonContact>(contactList.values());
 	}
 	
 	
