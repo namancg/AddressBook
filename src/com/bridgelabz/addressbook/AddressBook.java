@@ -1,7 +1,10 @@
 package com.bridgelabz.addressbook;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 public class AddressBook implements AddressBookIF{
 
@@ -24,7 +27,7 @@ public class AddressBook implements AddressBookIF{
 		do{
 			
 			System.out.println("Choose");
-			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Exit Address book System");
+			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Write to address book file \n7.read the data from file \n8.Exit Address book System");
 
 			switch (sc.nextInt()) {
 			case 1:
@@ -44,6 +47,10 @@ public class AddressBook implements AddressBookIF{
 				int sortChoice=sc.nextInt();
 				sortAddressBook(sortChoice);
 			case 6:
+				writeToAddressBookFile();
+			case 7:
+				readDataFromFile();
+			case 8:
 				changes = false;
 			}
 
@@ -235,6 +242,45 @@ public class AddressBook implements AddressBookIF{
 		System.out.println();
 	}
 	
+	}
+public void writeToAddressBookFile() {
+		
+		String bookName = this.getAddressBookname();
+		String fileName = bookName+".txt";
+		StringBuffer addressBookBuffer = new StringBuffer();
+		contactList.values().stream().forEach(contact -> {
+			String personDataString = contact.toString().concat("\n");
+			addressBookBuffer.append(personDataString);
+		});
+
+		try {
+			Files.write(Paths.get(fileName), addressBookBuffer.toString().getBytes());
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public List<String> readDataFromFile() {
+		
+		List<String> addressBookList = new ArrayList<String>();
+		String bookName = this.getAddressBookname();
+		String fileName = bookName+".txt";
+		System.out.println("Reading from : "+fileName+"\n");
+		try {
+			Files.lines(new File(fileName).toPath())
+				.map(line -> line.trim())
+				.forEach(employeeDetails -> {
+					System.out.println(employeeDetails);
+					addressBookList.add(employeeDetails);
+			});
+			
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		return addressBookList;
 	}
 	
 }
