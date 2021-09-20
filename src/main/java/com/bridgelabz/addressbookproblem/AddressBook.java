@@ -1,6 +1,20 @@
 package com.bridgelabz.addressbookproblem;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class AddressBook implements AddressBookIF{
 
@@ -26,7 +40,7 @@ public class AddressBook implements AddressBookIF{
 		do{
 			
 			System.out.println("Choose");
-			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Write to address book file \n7.read the data from file \n8.Exit Address book System");
+			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Write to address book file \n7.read the data from file \n8.Write data to csv \n9.read data from csv \n10.Exit Address book System");
 
 			switch (sc.nextInt()) {
 			case 1:
@@ -50,6 +64,26 @@ public class AddressBook implements AddressBookIF{
 			case 7:
 				readDataFromFile(IOService.FILE_IO);
 			case 8:
+				try {
+					writeDataToCSV();
+				} catch (CsvRequiredFieldEmptyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CsvDataTypeMismatchException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			case 9:
+				try {
+					readDataFromCSV();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			case 10:
 				changes = false;
 			}
 
@@ -243,7 +277,7 @@ public class AddressBook implements AddressBookIF{
 	private void printSortedList(List<PersonContact> sortedContactList) 
 	{
 		System.out.println("Sorted Address Book "+this.getAddressBookname()+"");
-		Iterator iterator = sortedContactList.iterator();
+		Iterator<PersonContact> iterator = sortedContactList.iterator();
 		while (iterator.hasNext()) {
 		System.out.println(iterator.next());
 		System.out.println();
@@ -291,5 +325,50 @@ public class AddressBook implements AddressBookIF{
 		}
 		return employeePayrollFromFile;
 	}
-
+	 public void readDataFromCSV() throws IOException
+	 {
+	    	String fileName ="Contacts.csv";
+	        try (Reader reader = Files.newBufferedReader(Paths.get("./"+fileName));
+	             CSVReader csvReader = new CSVReader(reader);){
+	        	List<String[]> recordsList= csvReader.readAll();
+				try {
+					recordsList = csvReader.readAll();
+	            for(String[] record : recordsList) {
+	                System.out.println("FIRST NAME = " + record[0]);
+	                System.out.println("LAST NAME = " + record[1]);
+	                System.out.println("PHONE NUMBER = " + record[2]);
+	                System.out.println("EMAIL = " + record[3]);
+	                System.out.println("STATE = " + record[4]);
+	                System.out.println("ZIP CODE = " + record[5]);
+	                System.out.println("CITY = " + record[6]);
+	                System.out.println("\n \n");
+	            }
+	        } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CsvException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+	    }
+	        } catch (CsvException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	 }
+	 
+	 public void writeDataToCSV() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException 
+	 {
+			
+			String fileName = "Contacts.csv";
+	        try (Writer writer = Files.newBufferedWriter(Paths.get("./"+fileName))) {
+	            StatefulBeanToCsvBuilder<PersonContact> builder = new StatefulBeanToCsvBuilder<>(writer);
+	            StatefulBeanToCsv<PersonContact> beanWriter = builder.build();
+	            ArrayList<PersonContact> listOfContacts= contactList.values().stream().collect(Collectors.toCollection(ArrayList::new));
+	            beanWriter.write(listOfContacts);
+	            writer.close();
+	        } 
+	        catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
 }
