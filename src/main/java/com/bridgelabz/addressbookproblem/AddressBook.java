@@ -1,12 +1,15 @@
 package com.bridgelabz.addressbookproblem;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
@@ -40,7 +43,7 @@ public class AddressBook implements AddressBookIF{
 		do{
 			
 			System.out.println("Choose");
-			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Write to address book file \n7.read the data from file \n8.Write data to csv \n9.read data from csv \n10.Exit Address book System");
+			System.out.println("1.Adding details to Address Book \n 2.Edit Existing Details \n 3.Display Address\n 4.Delete PersonContact \n5Sort \n6.Write to address book file \n7.read the data from file \n8.Write data to csv \n9.read data from csv \n10.Write to json\n11.Read to json\nExit");
 
 			switch (sc.nextInt()) {
 			case 1:
@@ -59,10 +62,13 @@ public class AddressBook implements AddressBookIF{
 				System.out.println("Enter 1 for NAME \n2 for CITY \n3 for STATE and \n4 for ZIPCODE ");
 				int sortChoice=sc.nextInt();
 				sortAddressBook(sortChoice);
+				break;
 			case 6:
 				writeToAddressBookFile(IOService.CONSOLE_IO);
+				break;
 			case 7:
 				readDataFromFile(IOService.FILE_IO);
+				break;
 			case 8:
 				try {
 					writeDataToCSV();
@@ -75,7 +81,7 @@ public class AddressBook implements AddressBookIF{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}break;
 			case 9:
 				try {
 					readDataFromCSV();
@@ -84,8 +90,23 @@ public class AddressBook implements AddressBookIF{
 					e.printStackTrace();
 				}
 			case 10:
-				changes = false;
+				try {
+					writeDataToJson();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}break;
+			case 11: try {
+					readDataFromJson();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}break;
+			case 12:
+				changes=false;
 			}
+			
 
 		}while(changes);
 	}
@@ -369,6 +390,43 @@ public class AddressBook implements AddressBookIF{
 	        } 
 	        catch (IOException e) {
 	            e.printStackTrace();
+	        }
+	    }
+	 
+	@Override
+		public void writeDataToJson() throws IOException {
+			
+			String fileName = "./Contacts.json";
+			Path filePath = Paths.get(fileName);
+			Gson gson = new Gson();
+			String json = gson.toJson(contactList.values());
+			FileWriter writer = new FileWriter(String.valueOf(filePath));
+			writer.write(json);
+			writer.close();
+
+		}
+
+		@Override
+	    public void readDataFromJson() throws IOException {
+	    	
+	        ArrayList<PersonContact> contactList;
+	        String fileName = "./Contacts.json";
+	        Path filePath = Paths.get(fileName);
+	        
+	        try (Reader reader = Files.newBufferedReader(filePath)) {
+	            Gson gson = new Gson();
+	            contactList = new ArrayList<>(Arrays.asList(gson.fromJson(reader, PersonContact[].class)));
+	            for (PersonContact contact : contactList) {
+	            	System.out.println("{");
+	                System.out.println("Firstname : " + contact.getFirstName());
+	                System.out.println("Lastname : " + contact.getLastName());
+	                System.out.println("City : " + contact.getCity());
+	                System.out.println("State : " + contact.getState());
+	                System.out.println("Zip Code : " + contact.getZip());
+	                System.out.println("Phone number : " + contact.getPhoneNumber());
+	                System.out.println("Email : " + contact.getEmail());
+	                System.out.println("}\n");
+	            }
 	        }
 	    }
 }

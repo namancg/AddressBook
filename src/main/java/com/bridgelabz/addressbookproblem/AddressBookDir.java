@@ -1,17 +1,24 @@
 package com.bridgelabz.addressbookproblem;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+
+import com.google.gson.Gson;
 public class AddressBookDir {
 	Scanner sc = new Scanner(System.in);
 	Map<String,AddressBook> addressBookDirectory = new HashMap<String,AddressBook>();
+	public Map<String, PersonContact> contactList = new HashMap<String,PersonContact>();
 	public AddressBook addressBook;
 
 
-public void operationSystem() {
+public void operationSystem() throws IOException {
 	
 	boolean changes = true;
 	do{
 		System.out.println("\nWhch operation to perform???");
-		System.out.println("1.Add new \n2.Edit Address book \n3.Search person by a region\n4.View people by region\n5. display by region\n6.count people\n7.display\n 8exit");
+		System.out.println("1.Add new \n2.Edit Address book \n3.Search person by a region\n4.View people by region\n5. display by region\n6.count people\n7.exit");
 
 		switch (sc.nextInt()) {
 		case 1:
@@ -53,9 +60,7 @@ public void operationSystem() {
 				countPeopleByRegion(AddressBook.personByState);
 			break;
 		case 7:
-			displaySystemContents();
-		case 8:
-			changes =false;
+		changes =false;
 		}
 
 	}while(changes);
@@ -167,4 +172,33 @@ public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listTo
 	System.out.println("No of People residing in " + regionName+" are: "+countPeople);
 	
 }
+public void readDataFromJson() {
+	
+	System.out.println("{");
+	for(AddressBook addressBook : addressBookDirectory.values()) {
+		System.out.println(addressBook.getAddressBookname()+": [\n");
+		try {
+			addressBook.readDataFromJson();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("]\n");
+		
+	}
+	System.out.println("}");
+	
+}
+public void writeDataToJson() throws IOException {
+	
+	String fileName = "./Contacts.json";
+	Path filePath = Paths.get(fileName);
+	Gson gson = new Gson();
+	String json = gson.toJson(contactList.values());
+	FileWriter writer = new FileWriter(String.valueOf(filePath));
+	writer.write(json);
+	writer.close();
+
+}
+
+
 }
