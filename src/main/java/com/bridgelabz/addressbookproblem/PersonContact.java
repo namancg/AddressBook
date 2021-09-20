@@ -1,10 +1,32 @@
 package com.bridgelabz.addressbookproblem;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class PersonContact {
-	private String firstName, lastName, email;
+	//private String firstName, lastName, email;
 	private long number;
 	private Address address;
+
+	@CsvBindByName(column = "First Name")
+	private String firstName;
 	
+	@CsvBindByName(column = "Last Name")
+	private String lastName;
+	
+	@CsvBindByName(column = "Email")
+	private String email;
+	
+	@CsvBindByName(column = "Phone Number")
+	private long phoneNumber;
+	
+	@CsvBindByName(column = "City")
+	private String city;
+	
+	@CsvBindByName(column = "State")
+	private String state;
+	
+	@CsvBindByName(column = "Zip Code")
+	private long zip;
 	public String getFirstName() {
 		return firstName;
 	}
@@ -47,7 +69,7 @@ public class PersonContact {
 
 	public String toString() {
 		
-		return "Person Details:\n First Name is:  "+firstName+" \n Last Name is: "+lastName+"\n Phone Number is: "+number+"\n Email is :"+email+"\n Address is: "+address;
+		return "Person Details:\nFirst Name:  "+firstName+" \nLast Name : "+lastName+"\nPhone Number : "+number+"\nEmail :"+email+"\nAddress : "+address;
 	}
 
 		
