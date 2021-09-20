@@ -1,0 +1,8 @@
+Person Details:
+ First Name is:  NAMAN 
+ Last Name is: CHANDRA
+ Phone Number is: 854562352
+ Email is :ncg@gmail.com
+ Address is: State - Karnataka
+City - Bangalore
+Zip Code - 560004
