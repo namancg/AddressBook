@@ -1,4 +1,4 @@
-package com.bridgelabz.addressbook;
+package com.bridgelabz.addressbookproblem;
 import java.util.*;
 public class AddressBookDir {
 	Scanner sc = new Scanner(System.in);

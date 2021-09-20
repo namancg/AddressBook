@@ -1,8 +1,8 @@
-package com.bridgelabz.addressbook;
+package com.bridgelabz.addressbookproblem;
 
 public class Address {
 	private String city, state;
-	private int zip;
+	private long zip;
 	
 	public String getCity() {
 		return city;
@@ -24,7 +24,7 @@ public class Address {
 		this.state = state;
 	}
 	
-	public void setZip(int zipCode) {
+	public void setZip(long zipCode) {
 		this.zip = zipCode;
 	}
 	

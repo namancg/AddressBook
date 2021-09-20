@@ -1,8 +1,4 @@
-package com.bridgelabz.addressbook;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+package com.bridgelabz.addressbookproblem;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,6 +9,9 @@ public class AddressBook implements AddressBookIF{
 	public Map<String, PersonContact> contactList = new HashMap<String,PersonContact>();
 	public static HashMap<String, ArrayList<PersonContact>> personByCity  = new HashMap<String, ArrayList<PersonContact>>();
 	public static HashMap<String, ArrayList<PersonContact>>personByState = new HashMap<String, ArrayList<PersonContact>>();
+	public enum IOService {
+		FILE_IO, CONSOLE_IO
+	}
 	public String getAddressBookname() {
 		return addressBookname;
 	}
@@ -31,7 +30,7 @@ public class AddressBook implements AddressBookIF{
 
 			switch (sc.nextInt()) {
 			case 1:
-				addContact();
+				createContact(sc);
 				break;
 			case 2:
 				editPerson();
@@ -47,9 +46,9 @@ public class AddressBook implements AddressBookIF{
 				int sortChoice=sc.nextInt();
 				sortAddressBook(sortChoice);
 			case 6:
-				writeToAddressBookFile();
+				writeToAddressBookFile(IOService.CONSOLE_IO);
 			case 7:
-				readDataFromFile();
+				readDataFromFile(IOService.FILE_IO);
 			case 8:
 				changes = false;
 			}
@@ -57,8 +56,16 @@ public class AddressBook implements AddressBookIF{
 		}while(changes);
 	}
 	
-	public void addContact() {
+	@Override
+	public void addContact(String firstName, PersonContact person) 
+	{
 		
+		contactList.put(firstName.toLowerCase(), person);
+
+	}
+	
+	public void createContact(Scanner sc)
+	{
 		PersonContact person = new PersonContact();
 		Address address = new Address();
 		
@@ -243,44 +250,46 @@ public class AddressBook implements AddressBookIF{
 	}
 	
 	}
-public void writeToAddressBookFile() {
+	@Override
+	public void writeToAddressBookFile(IOService ioService) {
+		if(ioService.equals(IOService.CONSOLE_IO))
+			displayContents();
 		
-		String bookName = this.getAddressBookname();
-		String fileName = bookName+".txt";
-		StringBuffer addressBookBuffer = new StringBuffer();
-		contactList.values().stream().forEach(contact -> {
-			String personDataString = contact.toString().concat("\n");
-			addressBookBuffer.append(personDataString);
-		});
-
-		try {
-			Files.write(Paths.get(fileName), addressBookBuffer.toString().getBytes());
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
+		else if(ioService.equals(IOService.FILE_IO)) {
+			String bookName = this.getAddressBookname();
+			String fileName = bookName+".txt";
+			new AddressBookFileIO().writeToAddressBookFile(fileName, contactList);
 		}
-
 	}
 	
-	public List<String> readDataFromFile() {
-		
-		List<String> addressBookList = new ArrayList<String>();
+	public void printData(IOService fileIo) {
 		String bookName = this.getAddressBookname();
 		String fileName = bookName+".txt";
-		System.out.println("Reading from : "+fileName+"\n");
-		try {
-			Files.lines(new File(fileName).toPath())
-				.map(line -> line.trim())
-				.forEach(employeeDetails -> {
-					System.out.println(employeeDetails);
-					addressBookList.add(employeeDetails);
-			});
+		if(fileIo.equals(IOService.FILE_IO)) new AddressBookFileIO().printData(fileName);
+	}
+
+
+	public long countEntries(IOService fileIo) {
+		
+		String bookName = this.getAddressBookname();
+		String fileName = bookName+".txt";
+		if(fileIo.equals(IOService.FILE_IO)) 
+			return new AddressBookFileIO().countEntries(fileName);
+		
+		return 0;
+	}
+	@Override
+	public List<String> readDataFromFile(IOService fileIo) {
+		
+		List<String> employeePayrollFromFile = new ArrayList<String>();
+		if(fileIo.equals(IOService.FILE_IO)) {
+			System.out.println("Employee Details from payroll-file.txt");
+			String bookName = this.getAddressBookname();
+			String fileName = bookName+".txt";
+			employeePayrollFromFile = new AddressBookFileIO().readDataFromFile(fileName);
 			
 		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
-		return addressBookList;
+		return employeePayrollFromFile;
 	}
-	
+
 }
