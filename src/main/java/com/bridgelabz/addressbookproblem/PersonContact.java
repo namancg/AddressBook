@@ -26,7 +26,7 @@ public class PersonContact {
 	private String state;
 	
 	@CsvBindByName(column = "Zip Code")
-	private long zip;
+	private String zip;
 	public String getFirstName() {
 		return firstName;
 	}
@@ -35,7 +35,7 @@ public class PersonContact {
 		return lastName;
 	}
 	
-	public long getnumber() {
+	public long getPhoneNumber() {
 		return number;
 	}
 	
@@ -70,6 +70,21 @@ public class PersonContact {
 	public String toString() {
 		
 		return "Person Details:\nFirst Name:  "+firstName+" \nLast Name : "+lastName+"\nPhone Number : "+number+"\nEmail :"+email+"\nAddress : "+address;
+	}
+
+	public String getCity() {
+		// TODO Auto-generated method stub
+		return city;
+	}
+
+	public String getState() {
+		// TODO Auto-generated method stub
+		return state;
+	}
+
+	public String getZip() {
+		// TODO Auto-generated method stub
+		return zip;
 	}
 
 		
