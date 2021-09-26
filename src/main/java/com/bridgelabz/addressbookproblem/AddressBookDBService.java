@@ -9,8 +9,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressBookDBService {
-	public List<PersonContact> readData() {
+public class AddressBookDBService
+{
+	public List<PersonContact> readData() 
+	{
 		String sql = "select * from contact_details c inner join addressBook_contact ac on ac.contact_id=c.contact_id";
 		List<PersonContact> contactList = new ArrayList<>();
 		try {
