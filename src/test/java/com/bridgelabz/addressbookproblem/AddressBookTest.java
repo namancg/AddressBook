@@ -1,10 +1,14 @@
 package com.bridgelabz.addressbookproblem;
+
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.bridgelabz.addressbookproblem.AddressBook.IOService;
+
 public class AddressBookTest {
-static AddressBook addressBook = new AddressBook() {
+static AddressBook addressBook = new AddressBook();
 	@Test
 	public void givenDetails_ShouldAddToContactList() {
 		
@@ -14,7 +18,7 @@ static AddressBook addressBook = new AddressBook() {
 		String firstName = "NAMAN";
 		String lastName = "CHANDRA";
 		String email = "ncg@gmail.com";
-		long phoneNumber = 854562352;
+		String phoneNumber = "953816996";
 		String city = "Bangalore";
 		String state = "Karnataka";
 		long zipCode = 560004;
@@ -47,5 +51,13 @@ static AddressBook addressBook = new AddressBook() {
 		long countEntries = entries.size();
 		Assert.assertEquals(8, countEntries);
 	}
+	@Test
+	public void givenAdressBookDB_WhenRetrived_ShouldatchAddressBookCount() 
+	{
+		AddressBookDir addressBook = new AddressBookDir();
+		List<PersonContact> count = addressBook.readData(IOService.DB_IO);
+		Assert.assertEquals(3, count.size());
+	}
+	
 	
 }
