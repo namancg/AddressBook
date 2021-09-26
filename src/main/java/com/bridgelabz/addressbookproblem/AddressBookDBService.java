@@ -11,13 +11,13 @@ import java.util.List;
 
 public class AddressBookDBService {
 	public List<PersonContact> readData() {
-		String sql = "SELECT * FROM contact_details";
+		String sql = "select * from contact_details c inner join addressBook_contact ac on ac.contact_id=c.contact_id";
 		List<PersonContact> contactList = new ArrayList<>();
 		try {
 			Connection connection = this.getConnection();
 			Statement statement = (Statement) connection.createStatement();
 			ResultSet result = ((java.sql.Statement) statement).executeQuery(sql);
-			while(result.next()) {
+			while(result.next()) {	
 				PersonContact person  = new PersonContact();
 				person.setFirstName(result.getString("first_name"));
 				person.setLastName(result.getString("last_name"));
