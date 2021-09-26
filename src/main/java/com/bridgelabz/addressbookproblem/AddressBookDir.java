@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+import com.bridgelabz.addressbookproblem.AddressBook.IOService;
 import com.google.gson.Gson;
 public class AddressBookDir {
 	Scanner sc = new Scanner(System.in);
@@ -172,8 +173,8 @@ public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listTo
 	System.out.println("No of People residing in " + regionName+" are: "+countPeople);
 	
 }
-public void readDataFromJson() {
-	
+public void readDataFromJson()
+{
 	System.out.println("{");
 	for(AddressBook addressBook : addressBookDirectory.values()) {
 		System.out.println(addressBook.getAddressBookname()+": [\n");
@@ -188,8 +189,8 @@ public void readDataFromJson() {
 	System.out.println("}");
 	
 }
-public void writeDataToJson() throws IOException {
-	
+public void writeDataToJson() throws IOException 
+{
 	String fileName = "./Contacts.json";
 	Path filePath = Paths.get(fileName);
 	Gson gson = new Gson();
@@ -199,6 +200,13 @@ public void writeDataToJson() throws IOException {
 	writer.close();
 
 }
+public List<PersonContact> readData(IOService ioService) {
+	List<PersonContact> contactsList = new ArrayList<PersonContact>();
+	if(ioService.equals(IOService.DB_IO))
+		contactsList = new AddressBookDBService().readData();
+	return contactsList;	
+}
+
 
 
 }
