@@ -56,7 +56,7 @@ static AddressBook addressBook = new AddressBook();
 	{
 		AddressBookDir addressBook = new AddressBookDir();
 		List<PersonContact> count = addressBook.readData(IOService.DB_IO);
-		Assert.assertEquals(3, count.size());
+		Assert.assertEquals(8, count.size());
 	}
 	
 	
