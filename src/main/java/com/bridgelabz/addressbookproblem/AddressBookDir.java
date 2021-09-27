@@ -126,7 +126,7 @@ public void searchByCity() {
 	for(AddressBook addressBook : addressBookDirectory.values()) {
 		ArrayList<PersonContact> contactList = addressBook.getContact();
 		contactList.stream()
-			.filter(person -> person.getFirstName().equals(personName) && person.getAddress().getCity().equals(cityName))
+			.filter(person -> person.getFirstName().equals(personName) && person.getCity().equals(cityName))
 			.forEach(person -> System.out.println(person));
 		
 	}		
@@ -143,7 +143,7 @@ public void searchByState() {
 	for(AddressBook addressBook : addressBookDirectory.values()) {
 		ArrayList<PersonContact> contactList = ((AddressBook) addressBook).getContact();
 		contactList.stream()
-			 .filter(person -> person.getFirstName().equals(personName) && person.getAddress().getState().equals(stateName))
+			 .filter(person -> person.getFirstName().equals(personName) && person.getState().equals(stateName))
 			.forEach(person -> System.out.println(person));
 		
 	}
@@ -157,7 +157,7 @@ public void displayPeopleByRegion(HashMap<String, ArrayList<PersonContact>> list
 	String regionName = sc.next();
 	listToDisplay.values().stream()
 		.map(region -> region.stream()
-		.filter(person -> person.getAddress().getState().equals(regionName) || person.getAddress().getCity().equals(regionName)))
+		.filter(person -> person.getState().equals(regionName) || person.getCity().equals(regionName)))
 		.forEach(person -> person.forEach(personDetails -> System.out.println(personDetails)));
 
 }
@@ -167,7 +167,7 @@ public void countPeopleByRegion(HashMap<String, ArrayList<PersonContact>> listTo
 	String regionName = sc.next();
 	long countPeople = listToDisplay.values().stream()
 			.map(region -> region.stream()
-				.filter(person -> person.getAddress().getState().equals(regionName) || person.getAddress().getCity().equals(regionName)))
+				.filter(person -> person.getState().equals(regionName) || person.getCity().equals(regionName)))
 				.count();
 				
 	System.out.println("No of People residing in " + regionName+" are: "+countPeople);
@@ -200,13 +200,14 @@ public void writeDataToJson() throws IOException
 	writer.close();
 
 }
-public List<PersonContact> readData(IOService ioService) {
-	List<PersonContact> contactsList = new ArrayList<PersonContact>();
-	if(ioService.equals(IOService.DB_IO))
-		contactsList = new AddressBookDBService().readData();
-	return contactsList;	
+public int readData(String addressBookName) {
+	List<PersonContact> contacts=AddressBookDBService.getDBInstance().readContacts(addressBookName);
+	return contacts.size();
 }
-
+public void writeAddressBookDB(PersonContact contact, String addressBookName) {
+	AddressBookDBService.getDBInstance().writeAddressBookDB(contact,addressBookName);
+	
+}
 
 
 }
