@@ -5,7 +5,7 @@ import com.opencsv.bean.CsvBindByName;
 public class PersonContact {
 	//private String firstName, lastName, email;
 	private long number;
-	private Address address;
+	private String address;
 
 	@CsvBindByName(column = "First Name")
 	private String firstName;
@@ -26,7 +26,22 @@ public class PersonContact {
 	private String state;
 	
 	@CsvBindByName(column = "Zip Code")
-	private String zip;
+	private long zip;
+	Place place;
+	private Integer contactId;
+	PersonContact(Integer contactId,String firstName, String lastName, String city, String address, String state, int zip, int phoneNumber,
+			String email ,Integer placeId) {
+		this.contactId=contactId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		place=new Place(placeId,city,zip,state);
+	}
+	public PersonContact() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -43,7 +58,7 @@ public class PersonContact {
 		return email;
 	}
 	
-	public Address getAddress() {
+	public String getAddress() {
 		return address;
 	}
 	
@@ -63,7 +78,7 @@ public class PersonContact {
 		this.email = email;
 	}
 	
-	public void setAddress(Address address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
@@ -71,23 +86,47 @@ public class PersonContact {
 		
 		return "Person Details:\nFirst Name:  "+firstName+" \nLast Name : "+lastName+"\nPhone Number : "+number+"\nEmail :"+email+"\nAddress : "+address;
 	}
-
-	public String getCity() {
-		// TODO Auto-generated method stub
-		return city;
-	}
-
-	public String getState() {
-		// TODO Auto-generated method stub
-		return state;
-	}
-
-	public String getZip() {
+	public long getZip() {
 		// TODO Auto-generated method stub
 		return zip;
 	}
+	public Place getPlace() {
+		return place;
+	}
+	public void setPlace(Place place) {
+		this.place = place;
+	}
+	public String getCity() {
+		return getPlace().getCity();
+	}
 
-		
+	public void setState(String state) {
+		this.getPlace().setState(state);
+	}
+
+	public String getState() {
+		return getPlace().getState();
+	}
+
+	public void setCity(String city) {
+		this.getPlace().setCity(city);
+	}
+
+	public int getZipCode() {
+		return getPlace().getZip();
+	}
+
+	public void setZipCode(int zip) {
+		this.getPlace().setZip(zip); 
+	}
+	public int getContactId() {
+		return contactId;
+	}
+	public void setContactId(int contactId) {
+		this.contactId = contactId;
+	}
+
+	
 	}
 
 
