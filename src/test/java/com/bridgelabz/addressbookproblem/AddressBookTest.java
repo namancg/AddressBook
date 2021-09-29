@@ -10,7 +10,7 @@ import org.junit.Test;
 import com.bridgelabz.addressbookproblem.AddressBook.IOService;
 
 public class AddressBookTest {
-	
+
 static AddressBook addressBook = new AddressBook();
 	@Test
 	public void givenDetails_ShouldAddToContactList() {
@@ -79,6 +79,14 @@ static AddressBook addressBook = new AddressBook();
 		LocalDate endDate = LocalDate.of(2020, 6, 19);
 		List<PersonContact> contacts = addressBookImpl.readConatctsAddedInRange(Date.valueOf(startDate), Date.valueOf(endDate));
 		System.out.println(contacts.size());
+	}
+	@Test
+	public void givenCityAndState_WhenCorrect_RetrieveAllContactsInCityOrState() {
+		AddressBookDir addressBookImpl = new AddressBookDir();
+		String city = "BANGALORE";
+		String state = "KARNATAKA";
+		List<PersonContact> contacts = addressBookImpl.readConatctsAddedInGivenCityOrState(city, state);
+		Assert.assertEquals(8, contacts.size());
 	}
 	
 	
