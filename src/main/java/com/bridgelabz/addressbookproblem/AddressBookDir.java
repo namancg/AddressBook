@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.sql.Date;
 
 import com.bridgelabz.addressbookproblem.AddressBook.IOService;
 import com.google.gson.Gson;
@@ -207,6 +208,9 @@ public int readData(String addressBookName) {
 public void writeAddressBookDB(PersonContact contact, String addressBookName) {
 	AddressBookDBService.getDBInstance().writeAddressBookDB(contact,addressBookName);
 	
+}
+public List<PersonContact> readConatctsAddedInRange(Date startDate, Date endDate) {
+	return AddressBookDBService.getDBInstance().readConatctsAddedInRange(startDate, endDate);
 }
 
 
