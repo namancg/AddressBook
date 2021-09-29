@@ -212,6 +212,10 @@ public void writeAddressBookDB(PersonContact contact, String addressBookName) {
 public List<PersonContact> readConatctsAddedInRange(Date startDate, Date endDate) {
 	return AddressBookDBService.getDBInstance().readConatctsAddedInRange(startDate, endDate);
 }
+public List<PersonContact> readConatctsAddedInGivenCityOrState(String city, String state) {
+
+	return AddressBookDBService.getDBInstance().readContactsInGivenCityOrState(city, state);
+}
 
 
 }
