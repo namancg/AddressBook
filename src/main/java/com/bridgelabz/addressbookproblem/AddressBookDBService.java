@@ -1,6 +1,8 @@
 package com.bridgelabz.addressbookproblem;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +13,7 @@ public class AddressBookDBService
 {
 	private static AddressBookDBService addressBookDBService;
 	private java.sql.PreparedStatement readContactPreparedStatement;
+	 private PreparedStatement contactAddedGivenRangeStatement;
 	private AddressBookDBService() {
 		
 	}
@@ -80,5 +83,27 @@ public class AddressBookDBService
 	        throw new DBException(e.getMessage());
 	    }
 	}
-	
+	public List<PersonContact> readConatctsAddedInRange(Date startDate, Date endDate) {
+        if (contactAddedGivenRangeStatement == null) {
+            this.preparedStatementToretriveContactsInRange();
+        }
+        try {
+        	contactAddedGivenRangeStatement.setDate(1, startDate);
+        	contactAddedGivenRangeStatement.setDate(2, endDate);
+            ResultSet resultSet = contactAddedGivenRangeStatement.executeQuery();
+            return this.getContactList(resultSet);
+        } catch (Exception e) {
+            throw new DBException(e.getMessage());
+        }
+    }
+		private void preparedStatementToretriveContactsInRange() {
+        try {
+            Connection connection = this.getConnection();
+            String query = "select * from contact_details where date_added between ? and ?";
+            contactAddedGivenRangeStatement = connection.prepareStatement(query);
+        } catch (Exception e) {
+            throw new DBException(e.getMessage());
+        }
+    }
+
 }
