@@ -1,5 +1,7 @@
 package com.bridgelabz.addressbookproblem;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Assert;
@@ -8,6 +10,7 @@ import org.junit.Test;
 import com.bridgelabz.addressbookproblem.AddressBook.IOService;
 
 public class AddressBookTest {
+	
 static AddressBook addressBook = new AddressBook();
 	@Test
 	public void givenDetails_ShouldAddToContactList() {
@@ -68,6 +71,14 @@ static AddressBook addressBook = new AddressBook();
 		System.out.println(updatedSize);
 		Assert.assertEquals(AddressBookSize,updatedSize);
 		
+	}
+	@Test
+	public void givenDateRange_WhenCorrect_RetrieveAllContactsAdded() {
+		AddressBookDir addressBookImpl = new AddressBookDir();
+		LocalDate startDate = LocalDate.of(2020, 4, 19);
+		LocalDate endDate = LocalDate.of(2020, 6, 19);
+		List<PersonContact> contacts = addressBookImpl.readConatctsAddedInRange(Date.valueOf(startDate), Date.valueOf(endDate));
+		System.out.println(contacts.size());
 	}
 	
 	
