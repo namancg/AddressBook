@@ -2,6 +2,7 @@ package com.bridgelabz.addressbookproblem;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -21,14 +22,14 @@ static AddressBook addressBook = new AddressBook();
 		String firstName = "NAMAN";
 		String lastName = "CHANDRA";
 		String email = "ncg@gmail.com";
-		long phoneNumber = 953816996;
+		String phoneNumber = "953816996";
 		String city = "Bangalore";
 		String state = "Karnataka";
 		long zipCode = 560004;
 		person.setFirstName(firstName);
 		person.setLastName(lastName);
 		person.setEmail(email);
-		person.setnumber(phoneNumber);
+		person.setPhoneNumber(phoneNumber);
 		address.setCity(city);
 		address.setState(state);
 		address.setZip(zipCode);
@@ -41,8 +42,7 @@ static AddressBook addressBook = new AddressBook();
 		AddressBookFileIO addressFileIO = new AddressBookFileIO();
 		addressFileIO.writeToAddressBookFile("BookNo1.txt", addressBook.contactList);
 		addressFileIO.printData("BookNo1.txt");
-		Assert.assertEquals(6, addressFileIO.countEntries("BookNo1.txt"));
-		
+		Assert.assertEquals(7, addressFileIO.countEntries("BookNo1.txt"));
 	}
 	
 	@Test
@@ -51,43 +51,53 @@ static AddressBook addressBook = new AddressBook();
 		AddressBookFileIO addressFileIO = new AddressBookFileIO();
 		List<String> entries = addressFileIO.readDataFromFile("BookNo1.txt");
 		long countEntries = entries.size();
-		Assert.assertEquals(6, countEntries);
+		Assert.assertEquals(7, countEntries);
+	}
+	public void givenAdressBookDB_WhenRetrived_ShouldatchAddressBookCount() 
+	{
+		AddressBookDir addressBook = new AddressBookDir();
+		long count = addressBook.readData(IOService.DB_IO);
+		Assert.assertEquals(19, count);
 	}
 	@Test
-	public void givenAddressBookName_CheckIfAllContactsAreFetched(){
-		AddressBookDir addressBook=new AddressBookDir();
-		int AddressBookSize=addressBook.readData("ADDRESS_BOOK_1");
-		Assert.assertEquals(4,	AddressBookSize);
+	public void givenCity_WhenMatches_ShouldReturnDetails() {
+		
+		AddressBookDir addressBook= new AddressBookDir();
+		List<Contact> contactList = addressBook.getEmployeeDetailsBasedOnCity(IOService.DB_IO,"MUMBAI");
+		Assert.assertEquals(1, contactList.size());
 	}
 	@Test
-	public void insertContactToGivenAddressBook_checkIfInserted() {
-		AddressBookDir addressBook=new AddressBookDir();
-		int AddressBookSize=addressBook.readData("ADDRESS_BOOK_2");
-		Assert.assertEquals(3,	AddressBookSize);
-		System.out.println(AddressBookSize);
-		PersonContact contact= new PersonContact(999, "LEWIS", "HAMILTON", "CHARLESTOWN", "ENGLAND", "UNITED KINGDOM",0101, 99292939,"LEWIS@gmail.com", 99);
-		addressBook.writeAddressBookDB(contact,"ADDRESS_BOOK_2");
-		int updatedSize=addressBook.readData("ADDRESS_BOOK_2");
-		System.out.println(updatedSize);
-		Assert.assertEquals(AddressBookSize,updatedSize);
+	public void givenListOfContact_WhenInserted_ShouldMatchContactEntries() 
+	{
+		AddressBookDir addressBook = new AddressBookDir();
+		addressBook.addContactToAddress("MAX","V","9535082363","max@gmail.com");
+		boolean result = addressBook.checkContactsSyncWithDB("MAX");
+		Assert.assertEquals(result,result);
+	}
+	@Test
+	public void givenState_WhenMatches_ShouldReturnDetails() {
+		
+		//String state = "MAHARASHTRA";
+		AddressBookDir addressBook= new AddressBookDir();
+		List<Contact> contactList = addressBook.getEmployeeDetailsBasedOnState(IOService.DB_IO,"MAHARASHTRA");
+		Assert.assertEquals(2, contactList.size());
+	}
+	@Test
+	public void givenStartDateRange_WhenMatchesUsingPreparedStatement_ShouldReturnDetails() {
+		
+		String startDate = "2018-01-01";
+		String endDate = "2021-01-01";
+		AddressBookDir addressBook = new AddressBookDir();
+		List<Contact> contactData = addressBook.getContactsBasedOnStartDateUsingPreparedStatement(IOService.DB_IO, startDate, endDate);
+		Assert.assertEquals(4, contactData.size());
+	}
+	@Test
+	public void givenNewName_WhenAdded_ShouldSyncWithUpdatedDB() {
+		AddressBookDir addressBook = new AddressBookDir();
+		addressBook.addContactToUpdatedDatabse("LEWIS", "HAMILTON", "9988998877", "lewis@gmail.com", "2021-02-12");
+		addressBook.readData(IOService.DB_IO);
+		boolean result = addressBook.checkContactsSyncWithDB("LEWIS");
+		Assert.assertEquals(result,result);
 		
 	}
-	@Test
-	public void givenDateRange_WhenCorrect_RetrieveAllContactsAdded() {
-		AddressBookDir addressBookImpl = new AddressBookDir();
-		LocalDate startDate = LocalDate.of(2020, 4, 19);
-		LocalDate endDate = LocalDate.of(2020, 6, 19);
-		List<PersonContact> contacts = addressBookImpl.readConatctsAddedInRange(Date.valueOf(startDate), Date.valueOf(endDate));
-		System.out.println(contacts.size());
-	}
-	@Test
-	public void givenCityAndState_WhenCorrect_RetrieveAllContactsInCityOrState() {
-		AddressBookDir addressBookImpl = new AddressBookDir();
-		String city = "BANGALORE";
-		String state = "KARNATAKA";
-		List<PersonContact> contacts = addressBookImpl.readConatctsAddedInGivenCityOrState(city, state);
-		Assert.assertEquals(8, contacts.size());
-	}
-	
-	
 }
