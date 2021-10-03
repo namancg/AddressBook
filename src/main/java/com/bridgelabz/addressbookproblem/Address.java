@@ -1,36 +1,63 @@
 package com.bridgelabz.addressbookproblem;
 
 public class Address {
-	private String city, state;
-	private long zip;
-	
+	private Integer placeId;
+	private String city;
+	private Integer zip;
+	private String state;
+
+	public Address(Integer placeId, String city, Integer zip, String state) {
+		this.placeId = placeId;
+		this.city = city;
+		this.zip = zip;
+		this.state = state;
+	}
+
+	public Address(String city, Integer zip, String state) {
+		this.city = city;
+		this.zip = zip;
+		this.state = state;
+	}
+
+	public Address() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getPlaceId() {
+		return placeId;
+	}
+
+	public void setPlaceId(Integer placeId) {
+		this.placeId = placeId;
+	}
+
 	public String getCity() {
 		return city;
 	}
-	
-	public String getState() {
-		return state;
-	}
-	
-	public long getZip() {
-		return zip;
-	}
-	
+
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
+
+	public Integer getZip() {
+		return zip;
+	}
+
+	public void setZip(Integer zip) {
+		this.zip = zip;
+	}
+
+	public String getState() {
+		return state;
+	}
+
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-	public void setZip(long zipCode) {
-		this.zip = zipCode;
-	}
-	
+
 	public String toString() {
-		
-		return "State - "+state+"\nCity - "+city+"\nZip Code - "+zip;
+
+		return "State :" + state + "\nCity - " + city + "\nZip Code - " + zip;
 	}
 
 }
