@@ -1,26 +1,30 @@
 package com.bridgelabz.addressbookproblem;
 
 import java.util.HashMap;
-
 import com.opencsv.bean.CsvBindByName;
 
 public class PersonContact {
-	//private String firstName, lastName, email;
+	// private String firstName, lastName, email;
 	public int getContactId() {
 		return contactId;
 	}
+
 	public void setContactId(int contactId) {
 		this.contactId = contactId;
 	}
+
 	public int getZip() {
 		return zip;
 	}
+
 	public void setZip(int zip) {
 		this.zip = zip;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -43,36 +47,37 @@ public class PersonContact {
 	private String phoneNumber;
 	@CsvBindByName
 	private String email;
-	Place place;
-	PersonContact(String firstName, String lastName, String city, String address, String state, int zip, String phoneNumber,
-			String email) {
+	Address Address;
+
+	PersonContact(String firstName, String lastName, String city, String address, String state, int zip,
+			String phoneNumber, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		place=new Place(city, zip, state);
+		Address = new Address(city, zip, state);
 	}
-	public Place getPlace() {
-		return place;
+
+	public void setAddress(Address Address) {
+		this.Address = Address;
 	}
-	public void setPlace(Place place) {
-		this.place = place;
-	}
-	PersonContact(Integer contactId,String firstName, String lastName, String city, String address, String state, int zip,String phoneNumber,
-			String email ,Integer placeId) {
-		this.contactId=contactId;
+
+	PersonContact(Integer contactId, String firstName, String lastName, String city, String address, String state,
+			int zip, String phoneNumber, String email, Integer AddressId) {
+		this.contactId = contactId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		place=new Place(placeId,city,zip,state);
+		Address = new Address(AddressId, city, zip, state);
 	}
 
 	public PersonContact() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -102,7 +107,7 @@ public class PersonContact {
 	}
 
 	public void setState(String state) {
-		this.state=state;
+		this.state = state;
 	}
 
 	public String getState() {
@@ -110,7 +115,7 @@ public class PersonContact {
 	}
 
 	public void setCity(String city) {
-		this.city=city;
+		this.city = city;
 	}
 
 	public int getZipCode() {
@@ -118,7 +123,7 @@ public class PersonContact {
 	}
 
 	public void setZipCode(int zip) {
-		this.zip=zip; 
+		this.zip = zip;
 	}
 
 	public String getPhoneNumber() {
@@ -155,8 +160,4 @@ public class PersonContact {
 				+ getPhoneNumber() + "\n" + "Email: " + getEmailId();
 	}
 
-
-	
-	}
-
-
+}
