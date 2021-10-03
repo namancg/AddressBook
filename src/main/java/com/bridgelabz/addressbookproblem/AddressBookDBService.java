@@ -1,7 +1,6 @@
 package com.bridgelabz.addressbookproblem;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,29 +12,23 @@ import java.util.List;
 public class AddressBookDBService {
 	private static AddressBookDBService addressBookDBService;
 	private PreparedStatement addressDataStatement;
-	private static List<PersonContact> addressList;
+	private static List<Contact> addressList;
 
 	AddressBookDBService() {
 
 	}
 
-	public List<PersonContact> readData() {
-		String sql = "SELECT * FROM contacts";
-		List<PersonContact> contactList = new ArrayList<>();
+	public List<Contact> readData() {
+		String sql = "SELECT * FROM address a , contacts c WHERE a.contact_id = c.contact_id";
+		List<Contact> contactList = new ArrayList<>();
 		try {
 			Connection connection = this.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
-			while (result.next()) {
-				PersonContact person = new PersonContact();
-				person.setFirstName(result.getString("firstName"));
-				person.setLastName(result.getString("lastName"));
-				person.setPhoneNumber(result.getString("phoneNumber"));
-				person.setEmail(result.getString("email"));
-				contactList.add(person);
-			}
+			contactList = getAddressData(result);
 			connection.close();
-		} catch (SQLException e) {
+		}
+		catch(SQLException e) {
 			e.printStackTrace();
 		}
 		return contactList;
@@ -57,6 +50,7 @@ public class AddressBookDBService {
 		return connection;
 
 	}
+
 	public List<Contact> readContactData() {
 		String sql = "SELECT * FROM contacts";
 		List<Contact> contactList = new ArrayList<>();
@@ -64,8 +58,8 @@ public class AddressBookDBService {
 			Connection connection = this.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
-			while(result.next()) {
-				Contact person  = new Contact();
+			while (result.next()) {
+				Contact person = new Contact();
 				person.setFirstName(result.getString("firstName"));
 				person.setLastName(result.getString("lastName"));
 				person.setPhoneNumber(result.getString("phoneNumber"));
@@ -73,8 +67,7 @@ public class AddressBookDBService {
 				contactList.add(person);
 			}
 			connection.close();
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return contactList;
@@ -104,14 +97,14 @@ public class AddressBookDBService {
 		return contactData;
 	}
 
-	public List<Contact> readContactDetails(String firstName, String lastName, String phoneNumber, String email) {
+	public List<Contact> readContactDetails(ResultSet resultset) {
 
-		String sqlStatement = "SELECT * FROM contacts JOIN address ON contacts.address_id = address.address_id;";
+		String sqlStatement = "SELECT * FROM contacts JOIN address ON contacts.contact_id = address.contact_id;";
 		List<Contact> contactsList = new ArrayList<>();
 
 		try (Connection connection = getConnection();) {
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sqlStatement);	
+			ResultSet resultSet = statement.executeQuery(sqlStatement);
 			contactsList = getContactList(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,42 +143,40 @@ public class AddressBookDBService {
 		}
 		return contactList;
 	}
+
 	public List<Contact> getContactData(String name) {
 		List<Contact> contactList = null;
-		if(this.addressDataStatement == null) {
+		if (this.addressDataStatement == null) {
 			this.prepareStatementForContactData();
 		}
 		try {
 			addressDataStatement.setString(1, name);
 			ResultSet resultSet = addressDataStatement.executeQuery();
 			contactList = this.getAddressContactData(resultSet);
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return contactList;
 	}
+
 	public List<Contact> getAddressContactData(ResultSet resultSet) {
 		List<Contact> contactList = new ArrayList<>();
 		try {
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				String firstName = resultSet.getString("firstName");
 				String lastName = resultSet.getString("lastName");
 				String phoneNumber = resultSet.getString("phoneNumber");
 				String email = resultSet.getString("email");
-				contactList.add(new Contact(firstName, lastName, phoneNumber,email));
+				contactList.add(new Contact(firstName, lastName, phoneNumber, email));
 			}
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return contactList;
-		
-	}
-	
 
-	public Contact addNewContactToContacts(String firstName, String lastName, String phoneNumber, String email,
-			String added) {
+	}
+
+	public Contact addNewContactToContacts(Contact contactToBeAdded) {
 
 		Connection connection = null;
 		Contact contactPerson = null;
@@ -200,9 +191,9 @@ public class AddressBookDBService {
 
 			String sql = String.format(
 					"INSERT INTO contacts (firstName, lastName, phoneNumber, email, added) VALUES ('%s', '%s', '%s', '%s', '%s');",
-					firstName, lastName, phoneNumber, email, added);
+					contactToBeAdded.getFirstName(), contactToBeAdded.getLastName(), contactToBeAdded.getPhoneNumber(), contactToBeAdded.getEmail(), contactToBeAdded.getAdded());
 			statement.executeUpdate(sql);
-			contactPerson = new Contact(firstName, lastName, email, phoneNumber);
+			contactPerson = new Contact(contactToBeAdded.getFirstName(), contactToBeAdded.getLastName(), contactToBeAdded.getPhoneNumber(), contactToBeAdded.getEmail());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -228,7 +219,8 @@ public class AddressBookDBService {
 	public List<Contact> getContactDetailsBasedOnCityUsingStatement(String city) {
 
 		String sqlStatement = String.format(
-				"SELECT * FROM address where city='%s';",city );
+				"select c.contact_id, c.firstName, c.lastName, c.phoneNumber, c.email, a.address, a.city,a.state, a.zipCode from contacts c, address a where c.contact_id=a.contact_id and a.city='%s';",
+				city);
 		List<Contact> contactList = new ArrayList<>();
 
 		try (Connection connection = getConnection()) {
@@ -240,11 +232,12 @@ public class AddressBookDBService {
 		}
 		return contactList;
 	}
-
+	
 	public List<Contact> getContactDetailsBasedOnStateUsingStatement(String state) {
 
 		String sqlStatement = String.format(
-				"SELECT * FROM address WHERE state = '%s';", state);
+				"select c.contact_id,c.firstName,c.lastName,c.phoneNumber,c.email,a.address,a.city,a.state,a.zipCode from contacts c, address a where c.contact_id=a.contact_id and a.state='%s';",
+				state);
 		List<Contact> contactList = new ArrayList<>();
 
 		try (Connection connection = getConnection()) {
@@ -256,56 +249,59 @@ public class AddressBookDBService {
 		}
 		return contactList;
 	}
-	public List<PersonContact> getPersonDetailsBasedOnNameUsingStatement(String name) {
-		String sqlStatement = String.format("SELECT * FROM contacts WHERE firstName  = '%s';",name);
-		List<PersonContact> addressList = new ArrayList<>();
-				
-		try (Connection connection = this.getConnection();){
+
+	public List<Contact> getPersonDetailsBasedOnNameUsingStatement(String name) {
+		String sqlStatement = String.format(
+				"SELECT * FROM contacts c, address a  WHERE a.contact_id=c.contact_id and firstName  = '%s';");
+		List<Contact> addressList = new ArrayList<>();
+
+		try (Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sqlStatement);
 			addressList = this.getAddressData(resultSet);
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return addressList;
 	}
-	public int updateContact(String firstName, String lastName, String phoneNumber, String email) 
-	{
-		String sqlString = String.format("update contacts set lastName ='%s',phoneNumber ='%s',email='%s' where firstName= '%s';",lastName,phoneNumber,email,firstName);
-		try(Connection connection = this.getConnection()) {
+
+	public int updateContact(Contact argumentsToBeAdded) {
+		String sqlString = String.format(
+				"update contacts set lastName ='%s',phoneNumber ='%s',email='%s' where firstName= '%s';",argumentsToBeAdded.getLastName(),
+				argumentsToBeAdded.getPhoneNumber(), argumentsToBeAdded.getEmail(), argumentsToBeAdded.getFirstName());
+		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			return statement.executeUpdate(sqlString);
-		}
-		catch(SQLException e) 
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}return 0;
-	}
-	private List<PersonContact> getAddressData(ResultSet resultSet) {
-		
-		addressList = new ArrayList<>();
-			
-			try {
-				while(resultSet.next()) {
-					String firstName = resultSet.getString("firstname");
-					String lastName = resultSet.getString("lastName");
-					String address = resultSet.getString("address");
-					String city  = resultSet.getString("city");
-					String state   = resultSet.getString("state");
-					String phoneNumber   = resultSet.getString("phoneNumber");
-					int pinCode   = resultSet.getInt("pinCode");
-					String email   = resultSet.getString("email");
-					addressList.add(new PersonContact(firstName,lastName, address, city,state,pinCode,phoneNumber,email));
-					
-				}
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
-			return addressList;
-			
 		}
+		return 0;
+	}
+
+	private List<Contact> getAddressData(ResultSet resultSet) {
+
+		addressList = new ArrayList<>();
+
+		try {
+			while (resultSet.next()) {
+				String firstName = resultSet.getString("firstname");
+				String lastName = resultSet.getString("lastName");
+				String address = resultSet.getString("address");
+				String city = resultSet.getString("city");
+				String state = resultSet.getString("state");
+				String phoneNumber = resultSet.getString("phoneNumber");
+				int pinCode = resultSet.getInt("pinCode");
+				String email = resultSet.getString("email");
+				addressList
+						.add(new Contact(firstName, lastName, address, city));
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return addressList;
+
+	}
 
 	private List<Contact> getContactDetails(ResultSet resultSet) {
 
